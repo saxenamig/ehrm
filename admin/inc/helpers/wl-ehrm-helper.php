@@ -159,18 +159,31 @@ class EHRMHelperClass {
 	 * @return boolean value
 	 */
 	public static function check_user_availability() {
-		$staffs        = get_option( 'ehrm_staffs_data' );
+		global $wpdb;
+		//$staffs        = get_option( 'ehrm_staffs_data' );
 		$status        = 0;
 		$user_id       = get_current_user_id();
+		$staffs = EHRM_Helper::check_staff_existance( $user_id );
 
+		if ( ! empty ( $staffs[0]->total > 0 ) ) {        		
+			$exist = 1;
+		} else {
+			$exist = 0;
+		}
 		
-		if ( ! empty ( $staffs ) ) {
+		/*if ( ! empty ( $staffs ) ) {
 			foreach ( $staffs as $key => $value ) {
 				if ( $user_id == $value['ID'] ) {
 					$status++;
 				}
 			}
+		}*/	
+			
+		if ( $staffs[0]->total > 0 ) {
+			$status++;
 		}
+			
+		
 
 		if ( $status != 0 ) {
 			return true;
